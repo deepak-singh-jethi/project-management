@@ -28,10 +28,18 @@ function App() {
         id: taskId,
       };
 
-      return {
-        ...prev,
-        tasks: [...prev.tasks, newTask],
-      };
+      //check if previous task is itterable otherwise below code
+      if (!prev.tasks) {
+        return {
+          ...prev,
+          tasks: [newTask],
+        };
+      } else {
+        return {
+          ...prev,
+          tasks: [...prev.tasks, newTask],
+        };
+      }
     });
   }
 
@@ -84,16 +92,14 @@ function App() {
   //handle delete function =>
 
   function handleDelete(projectId) {
-    const index = projectsState.projects.findIndex((project) => {
-      return projectId === project.id;
-    });
-
-    console.log(index);
-
     setProjectsState((prev) => {
-      const arr = prev.projects;
-      arr.splice(index, 1);
-      return { selectedPage: undefined, projects: [...arr] };
+      return {
+        ...prev,
+        selectedPage: undefined,
+        projects: prev.projects.filter((project) => {
+          return project.id !== projectId;
+        }),
+      };
     });
   }
 
